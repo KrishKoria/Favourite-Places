@@ -28,7 +28,10 @@ class PlaceList extends StatelessWidget {
                 color: Theme.of(context).colorScheme.onBackground,
               ),
         ),
-        onTap: () {},
+        onTap: () {
+          Navigator.of(context)
+              .pushNamed('/place-details', arguments: places[index]);
+        },
       ),
     );
   }

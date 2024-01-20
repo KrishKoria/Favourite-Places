@@ -1,6 +1,9 @@
+import 'package:favourite_places_app/models/place.dart';
 import 'package:favourite_places_app/screens/add_place.dart';
+import 'package:favourite_places_app/screens/place_details.dart';
 import 'package:favourite_places_app/screens/places.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:google_fonts/google_fonts.dart';
 
@@ -28,7 +31,9 @@ final theme = ThemeData().copyWith(
 
 void main() {
   runApp(
-    const MyApp(),
+    const ProviderScope(
+      child: MyApp(),
+    ),
   );
 }
 
@@ -44,7 +49,11 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => const Places(),
         '/add-place': (context) => const AddPlace(),
-        // '/place-details': (context) => const PlaceDetails(),
+        '/place-details': (context) {
+          final Place selectedPlace =
+              ModalRoute.of(context)!.settings.arguments as Place;
+          return PlaceDetails(place: selectedPlace);
+        },
       },
     );
   }
