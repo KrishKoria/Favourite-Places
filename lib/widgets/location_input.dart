@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-// import 'package:location/location.dart';
+import 'package:geolocator/geolocator.dart';
 
 class LocationInput extends StatefulWidget {
   const LocationInput({super.key});
@@ -9,34 +9,33 @@ class LocationInput extends StatefulWidget {
 
 class _LocationInputState extends State<LocationInput> {
   var _isGettingLocation = false;
-  // the below code is for getting the location of the user, however it is not working and causes the stupid app to crash
-  // Future<void> _getCurrentUserLocation() async {
-  //   print("Testing above setState1");
-  //   setState(() {
-  //     _isGettingLocation = true;
-  //   });
-  //   print("Above the if else block");
-  //   final permission = await requestPermission();
-  //   if (permission == PermissionStatus.authorizedAlways ||
-  //       permission == PermissionStatus.authorizedWhenInUse) {
-  //     try {
-  //       print("Inside the if else block");
-  //       final location = await getLocation(
-  //         settings: LocationSettings(
-  //           accuracy: LocationAccuracy.high,
-  //           askForPermission: true,
-  //           askForGPS: true,
-  //           askForGooglePlayServices: true,
-  //         ),
-  //       );
-  //       print("${location.latitude} ${location.longitude}");
-  //     } catch (e) {
-  //       print("Error getting location: $e");
-  //     }
-  //   } else {
-  //     print("Location permission not granted");
-  //   }
-  // }
+  Future<void> _getCurrentUserLocation() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+    setState(() {
+      _isGettingLocation = true;
+    });
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      return;
+    }
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        return;
+      }
+    }
+    if (permission == LocationPermission.deniedForever) {
+      return;
+    }
+    final location = await Geolocator.getCurrentPosition();
+    setState(() {
+      _isGettingLocation = false;
+    });
+    print(location.latitude);
+    print(location.longitude);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -70,18 +69,17 @@ class _LocationInputState extends State<LocationInput> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            // TextButton.icon(
-            //   onPressed: _getCurrentUserLocation,
-            //   icon: const Icon(Icons.location_on),
-            //   label: const Text("Get Location Automatically"),
-            // ),
+            TextButton.icon(
+              onPressed: _getCurrentUserLocation,
+              icon: const Icon(Icons.location_on),
+              label: const Text("Get Location Automatically"),
+            ),
             Expanded(
               child: TextButton.icon(
                 onPressed: () {},
-                icon: const Icon(Icons.map, size: 24),
+                icon: const Icon(Icons.map),
                 label: const Text(
-                  "Select Location on Map",
-                  style: TextStyle(fontSize: 20),
+                  "Select Manually",
                 ),
               ),
             ),
