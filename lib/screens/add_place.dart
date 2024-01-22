@@ -19,10 +19,9 @@ class _AddPlaceState extends ConsumerState<AddPlace> {
     if (_titleController.text.isEmpty || _pickedImage == null) {
       return;
     }
-    ref.read(userPlacesProvider.notifier).addPlace(
-          _titleController.text,
-          _pickedImage!,
-        );
+    ref
+        .read(userPlacesProvider.notifier)
+        .addPlace(_titleController.text, _pickedImage!);
     Navigator.of(context).pop();
   }
 

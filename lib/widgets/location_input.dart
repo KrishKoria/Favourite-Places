@@ -1,5 +1,9 @@
+import 'dart:convert';
+
+import 'package:favourite_places_app/models/place.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:dio/dio.dart';
 
 class LocationInput extends StatefulWidget {
   const LocationInput({super.key});
@@ -9,6 +13,17 @@ class LocationInput extends StatefulWidget {
 
 class _LocationInputState extends State<LocationInput> {
   var _isGettingLocation = false;
+  PlaceLocation? _placeLocation;
+  final dio = Dio();
+
+  String get locationImage {
+    if (_placeLocation == null) return '';
+    final lat = _placeLocation!.latitude;
+    final lng = _placeLocation!.longitude;
+
+    return 'https://maps.googleapis.com/maps/api/staticmap?center=$lat,$lng&zoom=16&size=600x300&maptype=roadmap&markers=color:red%7Clabel:A%7C$lat,$lng&key=AIzaSyBFS7waRwKuLnKIo3j7yCwpnPH6wDWfHKw';
+  }
+
   Future<void> _getCurrentUserLocation() async {
     bool serviceEnabled;
     LocationPermission permission;
@@ -30,11 +45,21 @@ class _LocationInputState extends State<LocationInput> {
       return;
     }
     final location = await Geolocator.getCurrentPosition();
+    final response = await dio.get(
+        'https://maps.googleapis.com/maps/api/geocode/json?latlng=${location.latitude},${location.longitude}&key=AIzaSyBFS7waRwKuLnKIo3j7yCwpnPH6wDWfHKw');
+    final responseData =
+        json.decode(response.toString()) as Map<String, dynamic>;
+
+    final address = responseData['results'][0]['formatted_address'];
+
     setState(() {
+      _placeLocation = PlaceLocation(
+        latitude: location.latitude,
+        longitude: location.longitude,
+        address: address,
+      );
       _isGettingLocation = false;
     });
-    print(location.latitude);
-    print(location.longitude);
   }
 
   @override
@@ -51,6 +76,15 @@ class _LocationInputState extends State<LocationInput> {
       );
     } else {
       previewContent = const CircularProgressIndicator();
+    }
+
+    if (_placeLocation != null) {
+      previewContent = Image.network(
+        locationImage,
+        fit: BoxFit.cover,
+        width: double.infinity,
+        height: double.infinity,
+      );
     }
     return Column(
       children: [
