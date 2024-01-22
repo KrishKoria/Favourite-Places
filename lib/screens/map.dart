@@ -5,20 +5,21 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 class MapScreen extends StatefulWidget {
   const MapScreen({
     super.key,
-    this.initialLocation = const PlaceLocation(
+    this.location = const PlaceLocation(
       latitude: 37.422,
       longitude: -122.084,
       address: '',
     ),
     this.isSelecting = true,
   });
-  final PlaceLocation initialLocation;
+  final PlaceLocation location;
   final bool isSelecting;
   @override
   State<MapScreen> createState() => _MapScreenState();
 }
 
 class _MapScreenState extends State<MapScreen> {
+  LatLng? _pickedPosition;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,28 +29,39 @@ class _MapScreenState extends State<MapScreen> {
           if (widget.isSelecting)
             IconButton(
               icon: const Icon(Icons.save),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).pop(_pickedPosition);
+              },
             ),
         ],
       ),
       body: GoogleMap(
-        initialCameraPosition: CameraPosition(
-          target: LatLng(
-            widget.initialLocation.latitude,
-            widget.initialLocation.longitude,
-          ),
-          zoom: 16,
-        ),
-        markers: {
-          Marker(
-            markerId: const MarkerId('m1'),
-            position: LatLng(
-              widget.initialLocation.latitude,
-              widget.initialLocation.longitude,
+          onTap: !widget.isSelecting
+              ? null
+              : (position) {
+                  setState(() {
+                    _pickedPosition = position;
+                  });
+                },
+          initialCameraPosition: CameraPosition(
+            target: LatLng(
+              widget.location.latitude,
+              widget.location.longitude,
             ),
+            zoom: 16,
           ),
-        },
-      ),
+          markers: (_pickedPosition == null && widget.isSelecting)
+              ? {}
+              : {
+                  Marker(
+                    markerId: const MarkerId('m1'),
+                    position: _pickedPosition ??
+                        LatLng(
+                          widget.location.latitude,
+                          widget.location.longitude,
+                        ),
+                  ),
+                }),
     );
   }
 }
