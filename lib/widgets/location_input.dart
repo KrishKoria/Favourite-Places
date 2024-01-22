@@ -22,7 +22,7 @@ class _LocationInputState extends State<LocationInput> {
     final lat = _placeLocation!.latitude;
     final lng = _placeLocation!.longitude;
 
-    return 'https://maps.googleapis.com/maps/api/staticmap?center=$lat,$lng&zoom=16&size=600x300&maptype=roadmap&markers=color:red%7Clabel:A%7C$lat,$lng&key=AIzaSyBFS7waRwKuLnKIo3j7yCwpnPH6wDWfHKw';
+    return 'https://maps.googleapis.com/maps/api/staticmap?center=$lat,$lng&zoom=16&size=600x300&maptype=roadmap&markers=color:red%7Clabel:A%7C$lat,$lng&key=AIzaSyC1tZoNbomHoYJWaLR_YgwZ1-K_1GoxCfY';
   }
 
   Future<void> _getCurrentUserLocation() async {
@@ -47,7 +47,7 @@ class _LocationInputState extends State<LocationInput> {
     }
     final location = await Geolocator.getCurrentPosition();
     final response = await dio.get(
-        'https://maps.googleapis.com/maps/api/geocode/json?latlng=${location.latitude},${location.longitude}&key=AIzaSyBFS7waRwKuLnKIo3j7yCwpnPH6wDWfHKw');
+        'https://maps.googleapis.com/maps/api/geocode/json?latlng=${location.latitude},${location.longitude}&key=AIzaSyC1tZoNbomHoYJWaLR_YgwZ1-K_1GoxCfY');
     final responseData =
         json.decode(response.toString()) as Map<String, dynamic>;
 

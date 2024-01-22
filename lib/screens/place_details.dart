@@ -10,7 +10,7 @@ class PlaceDetails extends StatelessWidget {
     final lat = place.location.latitude;
     final lng = place.location.longitude;
 
-    return 'https://maps.googleapis.com/maps/api/staticmap?center=$lat,$lng&zoom=16&size=600x300&maptype=roadmap&markers=color:red%7Clabel:A%7C$lat,$lng&key=AIzaSyBFS7waRwKuLnKIo3j7yCwpnPH6wDWfHKw';
+    return 'https://maps.googleapis.com/maps/api/staticmap?center=$lat,$lng&zoom=16&size=600x300&maptype=roadmap&markers=color:red%7Clabel:A%7C$lat,$lng&key=AIzaSyC1tZoNbomHoYJWaLR_YgwZ1-K_1GoxCfY';
   }
 
   @override
@@ -39,9 +39,17 @@ class PlaceDetails extends StatelessWidget {
             right: 0,
             child: Column(
               children: [
-                CircleAvatar(
-                  radius: 70,
-                  backgroundImage: NetworkImage(locationImage),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).pushNamed(
+                      '/map',
+                      arguments: place.location,
+                    );
+                  },
+                  child: CircleAvatar(
+                    radius: 70,
+                    backgroundImage: NetworkImage(locationImage),
+                  ),
                 ),
                 Container(
                   decoration: const BoxDecoration(

@@ -1,5 +1,6 @@
 import 'package:favourite_places_app/models/place.dart';
 import 'package:favourite_places_app/screens/add_place.dart';
+import 'package:favourite_places_app/screens/map.dart';
 import 'package:favourite_places_app/screens/place_details.dart';
 import 'package:favourite_places_app/screens/places.dart';
 import 'package:flutter/material.dart';
@@ -53,6 +54,14 @@ class MyApp extends StatelessWidget {
           final Place selectedPlace =
               ModalRoute.of(context)!.settings.arguments as Place;
           return PlaceDetails(place: selectedPlace);
+        },
+        '/map': (context) {
+          final PlaceLocation selectedLocation =
+              ModalRoute.of(context)!.settings.arguments as PlaceLocation;
+          return MapScreen(
+            initialLocation: selectedLocation,
+            isSelecting: false,
+          );
         },
       },
     );
