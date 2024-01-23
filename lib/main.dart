@@ -47,7 +47,7 @@ class MyApp extends StatelessWidget {
       theme: theme,
       initialRoute: '/',
       routes: {
-        '/': (context) => const Places(),
+        '/': (context) => const PlacesScreen(),
         '/add-place': (context) => const AddPlace(),
         '/place-details': (context) {
           final Place selectedPlace =

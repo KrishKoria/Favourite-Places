@@ -22,5 +22,6 @@ class Place {
     required this.title,
     required this.image,
     required this.location,
-  }) : id = const Uuid().v4();
+    String? id,
+  }) : id = id ?? const Uuid().v4();
 }

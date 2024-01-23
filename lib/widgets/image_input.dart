@@ -70,7 +70,7 @@ class _ImageInputState extends State<ImageInput> {
     if (_storedImage == null) {
       content = TextButton.icon(
         icon: const Icon(Icons.camera),
-        label: const Text("Take Picture"),
+        label: const Text("Add a Picture"),
         onPressed: _takePicture,
       );
     } else {
